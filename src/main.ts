@@ -26,19 +26,22 @@ export const cart: {
 // 說明：請定義 PlantCategory Enum，並示範反向映射。
 // 目標：理解 Enum 定義與反向映射的寫法。
 
-export enum PlantCategory {}
-export const catKeyName: string =
-  PlantCategory[/* TODO: 取得 LargePlant 的數值 */ 0];
+export enum PlantCategory {
+  LargePlant,
+  MediumPlant,
+  SmallPlant,
+}
+export const catKeyName: string = PlantCategory[PlantCategory.LargePlant];
 
 // --- 題目三：type（& 組合） ---
 // 說明：請用 type 定義 BasicPlant 與 StockInfo，再用 & 組合為 OnShelfPlant，建立範例變數。
 // 目標：理解 type 宣告與交叉型別的寫法。
 
-export type BasicPlant = /* TODO: { id: 型別; name: 型別; price: 型別 } */ any;
-export type StockInfo = /* TODO: { sku: 型別; quantity: 型別 } */ any;
-export type OnShelfPlant = /* TODO: BasicPlant, StockInfo 組合 */ any;
+export type BasicPlant = { id: number; name: string; price: number };
+export type StockInfo = { sku: string; quantity: number };
+export type OnShelfPlant = BasicPlant & StockInfo;
 
-export const snakePlant /* TODO: OnShelfPlant */ = {
+export const snakePlant: OnShelfPlant = {
   id: 2,
   name: '虎尾蘭',
   price: 480,
@@ -51,13 +54,21 @@ export const snakePlant /* TODO: OnShelfPlant */ = {
 // 目標：理解介面擴充多重介面的寫法。
 export interface Price {
   /* TODO: price: 型別; currency:"TWD"|"USD" */
+  price: number;
+  currency: string;
 }
 export interface Shippable {
   /* TODO: weightKg: 型別; shipFrom: 型別 */
+  weightKg: number;
+  shipFrom: string;
 }
 // export interface PlantItem 組合 Price, Shippable 並包含 id/name
+export interface PlantItem extends Price, Shippable {
+  id: number;
+  name: string;
+}
 
-export const fiddleLeafFig /* TODO: PlantItem */ = {
+export const fiddleLeafFig: PlantItem = {
   id: 101,
   name: '琴葉榕',
   price: 2500,
@@ -71,9 +82,9 @@ export const fiddleLeafFig /* TODO: PlantItem */ = {
 // 目標：以 type 定義函式型別並實作。
 export type CartItem = { price: number; qty: number };
 export type Coupon = { type: 'percent' | 'cash'; amount: number };
-export type CalcTotalFn = /* TODO: (參數型別) => 型別 */ any;
+export type CalcTotalFn = (items: CartItem[], coupon: Coupon) => number;
 
-export const calcTotal /* TODO: CalcTotalFn */ = (items, coupon) => {
+export const calcTotal: CalcTotalFn = (items, coupon) => {
   const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
   if (!coupon) return subtotal;
   if (coupon.type === 'percent')
